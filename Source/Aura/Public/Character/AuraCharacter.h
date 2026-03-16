@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "AuraCharacterBase.h"
 #include "AuraCharacter.generated.h"
-
 /**
  * 
  */
@@ -18,5 +17,5 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 private:
-	void InitAbilityActorInfo();
+	void InitAbilityActorInfo() override;
 };
