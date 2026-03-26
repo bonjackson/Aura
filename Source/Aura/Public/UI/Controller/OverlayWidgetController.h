@@ -38,8 +38,8 @@ class AURA_API UOverlayWidgetController : public UAuraWidgetController
 {
 	GENERATED_BODY()
 public:
-	virtual void BroadCastInitialValues() override;
-	virtual  void BindCallbackToDepencies() override;
+	virtual void BroadcastInitialValues() override;
+	virtual  void BindCallbacksToDependencies() override;
 	
 	
 	UPROPERTY(BlueprintAssignable,Category="GAS|Attributes")

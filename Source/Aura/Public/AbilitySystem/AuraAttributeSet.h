@@ -1,4 +1,4 @@
-
+ 
 
 #pragma once
 
@@ -12,12 +12,16 @@
 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+
+template<class T>
+using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+
 USTRUCT()
 struct FEffectProperties
 {
 	GENERATED_BODY()
 	
-	FEffectProperties(){}
+	FEffectProperties(){} 
 	
 	FGameplayEffectContextHandle EffectContextHandle;
 	
@@ -53,13 +57,16 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	GENERATED_BODY()
 public:
 	
-	
+
 	UAuraAttributeSet();
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps ) const override;
 	
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute,float& NewValue) override;
 	
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+	
+	TMap<FGameplayTag,TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
+	
 	
 	/*
 	 *Primary Attributes

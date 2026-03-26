@@ -6,7 +6,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
-void UOverlayWidgetController::BroadCastInitialValues()
+void UOverlayWidgetController::BroadcastInitialValues()
 {
 	const UAuraAttributeSet* AuraAttributeSet=CastChecked<UAuraAttributeSet>(AttributeSet);
 	
@@ -17,7 +17,7 @@ void UOverlayWidgetController::BroadCastInitialValues()
 	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
 }
 
-void UOverlayWidgetController::BindCallbackToDepencies()
+void UOverlayWidgetController::BindCallbacksToDependencies()
 {
 	const UAuraAttributeSet* AuraAttributeSet= CastChecked<UAuraAttributeSet>(AttributeSet);
 	
