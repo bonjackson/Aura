@@ -8,6 +8,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 class UAbilitySystemComponent;
 class UAttributeSet;
@@ -21,6 +22,7 @@ public:
 	AAuraCharacterBase();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent()const override;
 	UAttributeSet*GetAttributeSet()const{return AttributeSet; }; 
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -46,5 +48,17 @@ protected:
 	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect>GameplayEffectClass,float Level) const;
 	void InitializeDefaultAttributes() const;
+	
+	void AddCharacterAbilities();
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName WeaponTipSocketName;
+	virtual FVector GetCombatSocketLocation() override;
+private:
+
+	
+	UPROPERTY(EditAnywhere, Category="Attributes")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities; 
+
 };
  
