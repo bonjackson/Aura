@@ -8,6 +8,7 @@
 #include "AuraProjectileSpell.generated.h"
 
 
+
 /**
  * 
  */
@@ -20,4 +21,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AProjectile> ProjectileClass;
+	
+	UFUNCTION(BlueprintCallable, Category="Projectile")
+	void SpawnProjectile();
+	
 };
