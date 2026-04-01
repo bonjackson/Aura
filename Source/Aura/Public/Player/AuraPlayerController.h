@@ -71,5 +71,10 @@ private:
 	TObjectPtr<USplineComponent> Spline; //自动寻路时生成的样条线
 	
 	void AutoRun();
-
+	
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> ShiftAction;
+	void ShiftPressed() { bShiftKeyDown = true; };
+	void ShiftReleased() { bShiftKeyDown = false; };
+	bool bShiftKeyDown = false;
 };

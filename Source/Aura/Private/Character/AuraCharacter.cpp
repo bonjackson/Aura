@@ -5,6 +5,7 @@
 #include "Logging/LogMacros.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
@@ -21,6 +22,10 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationPitch=false;
 	bUseControllerRotationRoll=false;
 	bUseControllerRotationYaw=false;
+	
+	//设置角色不会和相机碰撞
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)

@@ -80,7 +80,7 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 		if(GetASC())	GetASC()->AbilityInputTagReleased(InputTag);
 		return;
 	}
-	if(bTargeting)
+	if(bTargeting|| bShiftKeyDown)
 	{
 		if(GetASC())	GetASC()->AbilityInputTagReleased(InputTag);
 	}
@@ -112,7 +112,7 @@ void AAuraPlayerController::AbilityInputTagHold(FGameplayTag InputTag)
 		return;
 	}
 	
-	if (bTargeting)
+	if (bTargeting || bShiftKeyDown)
 	{
 		if (GetASC())	GetASC()->AbilityInputTagHold(InputTag);
 	}
@@ -166,6 +166,9 @@ void AAuraPlayerController::SetupInputComponent()
 	UAuraInputComponent* AuraInputComponent=CastChecked<UAuraInputComponent>(InputComponent);
 	
 	AuraInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this,&AAuraPlayerController::Move);
+	
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ThisClass::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ThisClass::ShiftReleased);
 	
 	AuraInputComponent->BindAbilityAction(InputConfig, this, &ThisClass::AbilityInputTagPressed,&ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHold);
 	
