@@ -4,6 +4,7 @@
 #include "Actor/Projectile.h"
 
 #include "NiagaraFunctionLibrary.h"
+#include "Aura/Aura.h"
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -16,6 +17,7 @@ AProjectile::AProjectile()
 	
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	SetRootComponent(Sphere); //设置其为根节点，
+	Sphere->SetCollisionObjectType(ECC_PROJECTILE);
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly); //设置其只用作查询使用
 	Sphere->SetCollisionResponseToChannels(ECR_Ignore); //设置其忽略所有碰撞检测
 	Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap); //设置其与世界动态物体产生重叠事件
@@ -27,7 +29,7 @@ AProjectile::AProjectile()
 	ProjectileMovement->InitialSpeed = 550.f; //设置初始速度
 	ProjectileMovement->MaxSpeed = 550.f; //设置最大速度
 	ProjectileMovement->ProjectileGravityScale = 0.f; //设置重力影响因子，0为不受影响
-
+																												
 }
 
 void AProjectile::Destroyed()
@@ -64,7 +66,7 @@ void AProjectile::PlayImpact() const
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 	
 	//将音乐停止后会自动销毁
-	LoopingSoundComponent->Stop();
+	if(LoopingSoundComponent) LoopingSoundComponent->Stop();
 }
 
 // Called when the game starts or when spawned

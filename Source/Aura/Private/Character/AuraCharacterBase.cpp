@@ -4,12 +4,18 @@
 #include "Character/AuraCharacterBase.h"
 #include"AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Aura/Aura.h"
+#include "Components/CapsuleComponent.h"
 
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
  	
 	PrimaryActorTick.bCanEverTick = false;
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_PROJECTILE, ECR_Overlap); //设置碰撞体可以和发射物产生重叠
+	GetMesh()->SetGenerateOverlapEvents(true); //设置碰撞体可以生成重叠事件
 	Weapon=CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(),FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);

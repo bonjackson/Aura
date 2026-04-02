@@ -19,26 +19,27 @@ class AURA_API AProjectile : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProjectile();
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere)
-	
-	TObjectPtr<UNiagaraSystem> ImpactEffect;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<USoundBase> ImpactSound;
-	
 	void Destroyed() override;
+	UFUNCTION()
+	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
-	UFUNCTION()
-	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	bool bHit = false;
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UNiagaraSystem> ImpactEffect;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> ImpactSound;
 	
 	void PlayImpact() const;
-	
-	bool bHit;
 	
 	//移动循环音效
 	UPROPERTY(EditAnywhere)
@@ -48,13 +49,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 	
-public:	
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
-	
-private:
-
 	//此物体的存在时间
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 15.f;
+	
+
 };
