@@ -25,6 +25,11 @@ void UAuraTargetDataUnderMouse::Activate()
 		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey).AddUObject(this, &UAuraTargetDataUnderMouse::OnTargetDataReplicatedCallback);
 		//判断在服务器端，上面的委托是否已经广播过
 		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(SpecHandle, ActivationPredictionKey);
+		
+		if (!bCalledDelegate)
+		{
+			SetWaitingOnRemotePlayerData(); 
+		}
 	}
 }
 
