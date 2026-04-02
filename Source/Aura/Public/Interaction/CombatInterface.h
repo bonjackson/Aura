@@ -26,7 +26,7 @@ public:
 	virtual int32 GetPlayerLevel();
 	virtual FVector GetCombatSocketLocation();
 	
-	
+protected:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& Target);
 };
