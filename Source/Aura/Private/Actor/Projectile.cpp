@@ -3,9 +3,13 @@
 
 #include "Actor/Projectile.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Aura/Aura.h"
 #include "Components/AudioComponent.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -29,6 +33,9 @@ AProjectile::AProjectile()
 	ProjectileMovement->InitialSpeed = 550.f; //设置初始速度
 	ProjectileMovement->MaxSpeed = 550.f; //设置最大速度
 	ProjectileMovement->ProjectileGravityScale = 0.f; //设置重力影响因子，0为不受影响
+	
+
+
 																												
 }
 
@@ -49,6 +56,10 @@ void AProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	//在重叠后，销毁自身
 	if(HasAuthority())
 	{
+		if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		{
+			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectHandle.Data.Get());
+		}
 		Destroy();
 	}
 	else

@@ -42,7 +42,9 @@ void UAuraTargetDataUnderMouse::SendMouseCursorData()
 	APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();
 	FHitResult CursorHit;
 	PC->GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
-
+	
+	UE_LOG(LogTemp, Warning, TEXT("【客户端发送】获取到的鼠标坐标为: %s, 是否击中: %d"), *CursorHit.Location.ToString(), CursorHit.bBlockingHit);
+	
 	//创建需要上传服务器端的TargetData
 	FGameplayAbilityTargetData_SingleTargetHit* Data = new FGameplayAbilityTargetData_SingleTargetHit();
 	Data->HitResult = CursorHit;
@@ -72,6 +74,18 @@ void UAuraTargetDataUnderMouse::OnTargetDataReplicatedCallback(const FGameplayAb
 	//通知客户端 服务器端已经接收并处理了从客户端复制的目标数据（将服务器的TargetData应用到客户端，并清除掉缓存）
 	AbilitySystemComponent->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());
 	//判断服务器端是否通过验证
+	
+	
+	// ---> 【新增日志】看服务器到底收到了什么坐标 <---
+	if (const FGameplayAbilityTargetData* Data = DataHandle.Get(0))
+	{
+		if (const FHitResult* Hit = Data->GetHitResult())
+		{
+			UE_LOG(LogTemp, Error, TEXT("【服务器接收】收到的坐标为: %s"), *Hit->Location.ToString());
+		}
+	}
+	
+	
 	if(ShouldBroadcastAbilityTaskDelegates())
 	{
 		ValidData.Broadcast(DataHandle);
