@@ -26,7 +26,7 @@ struct FUIWidgetRow : public FTableRowBase
 	
 };
 class UAuraUserWidget;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributChanagedSignature, float, Newvalue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, Newvalue);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow,Row);
 
@@ -43,17 +43,17 @@ public:
 	
 	
 	UPROPERTY(BlueprintAssignable,Category="GAS|Attributes")
-	FOnAttributChanagedSignature OnHealthChanged;
+	FOnAttributeChangedSignature OnHealthChanged;
 	
 	
 	UPROPERTY(BlueprintAssignable,Category="GAS|Attributes")
-	FOnAttributChanagedSignature OnMaxHealthChanged;
+	FOnAttributeChangedSignature OnMaxHealthChanged;
 	
 	UPROPERTY(BlueprintAssignable,Category="GAS|Attributes")
-	FOnAttributChanagedSignature OnManaChanged;
+	FOnAttributeChangedSignature OnManaChanged;
 	
 	UPROPERTY(BlueprintAssignable,Category="GAS|Attributes")
-	FOnAttributChanagedSignature OnMaxManaChanged;
+	FOnAttributeChangedSignature OnMaxManaChanged;
 	
 	UPROPERTY(BlueprintAssignable,Category="GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;

@@ -4,8 +4,10 @@
 #include "Character/AuraCharacterBase.h"
 #include"AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
+#include "UI/Widget/AuraUserWidget.h"
 
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -31,9 +33,7 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
-
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);

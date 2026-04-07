@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
+
 #include "AuraCharacterBase.generated.h"
 
 class UGameplayAbility;
@@ -22,7 +24,6 @@ public:
 	AAuraCharacterBase();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent()const override;
 	UAttributeSet*GetAttributeSet()const{return AttributeSet; }; 
-
 protected:
 
 	virtual void BeginPlay() override;
@@ -45,6 +46,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Widget")
+	TObjectPtr<UWidgetComponent> HealthBar;
 	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect>GameplayEffectClass,float Level) const;
 	void InitializeDefaultAttributes() const;
