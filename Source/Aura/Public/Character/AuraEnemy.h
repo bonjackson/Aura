@@ -39,6 +39,10 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category="Combat")
 	float BaseWalkSpeed = 250.f; //当前角色的最大移动速度
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
+	float LifeSpan = 5.f; //设置死亡后的存在时间
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
@@ -52,4 +56,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Widget")
 	TObjectPtr<UWidgetComponent> HealthBar;
+	
+	void Die() override;
 };

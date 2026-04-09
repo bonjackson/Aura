@@ -97,10 +97,15 @@ void AAuraEnemy::InitAbilityActorInfo()
 	
 	InitializeDefaultAttributes();
 	
-	UE_LOG(LogTemp, Warning, TEXT("%s 的生命值为 %f"), *this->GetName(), Cast<UAuraAttributeSet>(AttributeSet)->GetHealth());
 }
 
 void AAuraEnemy::InitializeDefaultAttributes() const
 {
 	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+}
+
+void AAuraEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
 }
