@@ -4,10 +4,9 @@
 #include "Character/AuraCharacterBase.h"
 #include"AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
-#include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
-#include "UI/Widget/AuraUserWidget.h"
+
 
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -68,5 +67,10 @@ void AAuraCharacterBase::AddCharacterAbilities()
 FVector AAuraCharacterBase::GetCombatSocketLocation()
 {
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
 }
 

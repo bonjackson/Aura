@@ -99,4 +99,9 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	FString("伤害标签")
 	);
 	
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get()
+	.AddNativeGameplayTag(
+		FName("Effects.HitReact"),
+		FString("受到攻击时，赋予的标签")
+	);
 }

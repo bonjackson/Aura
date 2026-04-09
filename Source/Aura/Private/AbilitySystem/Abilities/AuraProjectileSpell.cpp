@@ -45,7 +45,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get(); //获取标签单例
 		//UAbilitySystemBlueprintLibrary::AssignSetByCallerMagnitude() //使用DataName设置
 		
-		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel()); //根据等级获取技能伤害
+		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel() + 19);
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("火球术伤害：%f"), ScaledDamage));
 		
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, 50.f);

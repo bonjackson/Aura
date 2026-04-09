@@ -41,7 +41,7 @@ public:
 	
 	
 	FGameplayTag Damage;
-	
+	FGameplayTag Effects_HitReact; //受击 标签
 
 	
 	

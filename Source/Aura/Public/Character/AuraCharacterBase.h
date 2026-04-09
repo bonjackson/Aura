@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
 
@@ -47,8 +46,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Widget")
-	TObjectPtr<UWidgetComponent> HealthBar;
+
 	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect>GameplayEffectClass,float Level) const;
 	virtual void InitializeDefaultAttributes() const;
@@ -58,11 +56,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
 	virtual FVector GetCombatSocketLocation() override;
+	
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
+
 private:
 
 	
 	UPROPERTY(EditAnywhere, Category="Attributes")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities; 
+
 
 };
  

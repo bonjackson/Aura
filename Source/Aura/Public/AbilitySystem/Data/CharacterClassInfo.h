@@ -43,4 +43,7 @@ public:
 
 	//通过枚举获取对应的初始化类
 	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
+	
+	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults")
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 };
