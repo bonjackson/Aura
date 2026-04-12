@@ -6,6 +6,9 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+enum class ECharacterClass : uint8;
+class UAbilitySystemComponent;
+class UCharacterClassInfo;
 class UAttributeMenuWidgetController;
 class UOverlayWidgetController;
 /**
@@ -30,4 +33,10 @@ public:
 	//初始化角色的技能
 	UFUNCTION(BlueprintCallable, Category="MyAbilitySystemLibrary|CharacterClassDefaults")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
+	
+
+	
+	//获取角色配置数据
+	UFUNCTION(BlueprintCallable, Category="MyAbilitySystemLibrary|CharacterClassDefaults")
+	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
 };
