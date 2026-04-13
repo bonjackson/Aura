@@ -4,6 +4,7 @@
 #include "AbilitySystem/ExecCalc/ExecCalc_Damage.h"
 
 #include "AuraGameplayTags.h"
+#include "RPGAbilityTypes.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Interaction/CombatInterface.h"
@@ -53,6 +54,13 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	TargetBlockChance = FMath::Max(0.f, TargetBlockChance);
 	//根据格挡概率判断当前是否触发
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
+	
+	//获取GE的上下文句柄
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	
+	UAuraAbilitySystemLibrary::SetIsBlockHit(EffectContextHandle,bBlocked);
+
+	
 	if(bBlocked) Damage *= 0.5f;
 
 	//--------------------处理目标护甲和源的护甲穿透影响伤害--------------------
@@ -94,6 +102,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	//计算当前是否暴击
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
 	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
+	
+	UAuraAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle,bCriticalHit);
+	
 	//触发暴击 伤害乘以暴击伤害率
 	if(bCriticalHit) Damage = Damage * 2.f + SourceCriticalHitDamage;
 

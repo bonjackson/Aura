@@ -200,6 +200,7 @@ public:
 	
 	
 private:
-	static void ShowFloatingText(const FEffectProperties& Props, const float Damage);
+	//显示伤害数字
+	static void ShowFloatingText(const FEffectProperties& Props, const float Damage, bool IsBlockedHit, bool IsCriticalHit);
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data,FEffectProperties& Props) const;
 };

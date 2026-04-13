@@ -40,6 +40,21 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		
 		//创建一个GE的实例，并设置给投射物
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
+		EffectContextHandle.SetAbility(this); //设置技能
+		EffectContextHandle.AddSourceObject(Projectile); //设置GE的源
+		
+		//添加Actor列表
+		TArray<TWeakObjectPtr<AActor>> Actors;
+		Actors.Add(Projectile);
+		EffectContextHandle.AddActors(Actors);
+		//添加命中结果
+		FHitResult HitResult;
+		HitResult.Location = ProjectileTargetLocation;
+		EffectContextHandle.AddHitResult(HitResult);
+		//添加技能触发位置
+		EffectContextHandle.AddOrigin(ProjectileTargetLocation);
+		
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
 		
 		const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get(); //获取标签单例
