@@ -6,9 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "DamageTextComponent.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class AURA_API UDamageTextComponent : public UWidgetComponent
 {
