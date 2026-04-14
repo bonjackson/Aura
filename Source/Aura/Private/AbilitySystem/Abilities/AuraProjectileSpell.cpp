@@ -24,7 +24,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation(); //将方向转为旋转
-		Rotation.Pitch = 0.f; //设置Pitch为0，转向的朝向将平行于地面
+		//Rotation.Pitch = 0.f; //设置Pitch为0，转向的朝向将平行于地面
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(CombatInterface->GetCombatSocketLocation());
@@ -35,7 +35,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			ProjectileClass,
 			SpawnTransform,
 			GetOwningActorFromActorInfo(),
-			Cast<APawn>(GetOwningActorFromActorInfo()),
+			Cast<APawn>(GetAvatarActorFromActorInfo()),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 		
 		//创建一个GE的实例，并设置给投射物

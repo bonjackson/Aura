@@ -27,7 +27,7 @@ public:
 	/** 返回用于序列化的实际结构体 */
 	virtual UScriptStruct* GetScriptStruct() const override
 	{
-		return FGameplayEffectContext::StaticStruct();
+		return FRPGGameplayEffectContext::StaticStruct();
 	}
 	/** 创建一个副本，用于后续网络复制或者后续修改 */
 	virtual FRPGGameplayEffectContext* Duplicate() const override

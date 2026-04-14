@@ -255,7 +255,7 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, const f
 	//调用显示伤害数字
 	if(Props.SourceCharacter != Props.TargetCharacter)
 	{
-		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter,IsBlockedHit, IsCriticalHit); //调用显示伤害数字
 		}

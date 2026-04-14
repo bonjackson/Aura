@@ -51,6 +51,7 @@ void AProjectile::Destroyed()
 void AProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (GetInstigator() == OtherActor) return;
 	PlayImpact();
 
 	//在重叠后，销毁自身
