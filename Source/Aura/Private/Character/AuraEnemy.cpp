@@ -8,7 +8,10 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AI/AuraAIController.h"
 #include"Aura/Aura.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
 
@@ -107,6 +110,20 @@ void AAuraEnemy::InitAbilityActorInfo()
 void AAuraEnemy::InitializeDefaultAttributes() const
 {
 	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+}
+
+void AAuraEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	//当前设置只在服务器端运行
+	if(!HasAuthority()) return;
+	//AIController是在服务器端执行的，所以需要在PossessedBy函数回调中获取服务器返回
+	AuraAIController = Cast<AAuraAIController>(NewController);
+	//初始化行为树上设置的黑板
+	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	//运行行为树
+	AuraAIController->RunBehaviorTree(BehaviorTree);
 }
 
 void AAuraEnemy::Die()

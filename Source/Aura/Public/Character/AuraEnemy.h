@@ -10,6 +10,8 @@
 #include "UI/Controller/OverlayWidgetController.h"
 #include "AuraEnemy.generated.h"
 
+class UBehaviorTree;
+class AAuraAIController;
 /**
  * 
  */
@@ -42,11 +44,18 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
 	float LifeSpan = 5.f; //设置死亡后的存在时间
+	
+	UPROPERTY(EditAnywhere, Category="AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
 
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
 	virtual void InitializeDefaultAttributes() const;
+	
+	virtual void PossessedBy(AController* NewController) override;
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Character Class Defaults")
 	int32 Level = 1;
