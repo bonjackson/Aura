@@ -47,9 +47,13 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void OnEndOverlap(AActor* TargetActor);
 	
-	
-	
-	
+	//Instant和Duration的GE在应用后，此物体是否需要被销毁
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	bool bDestroyOnEffectApplication = true;
+
+	//敌人是否能够拾取此物体
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	bool bApplyEffectsToEnemies = false;
 	
 	UPROPERTY(EditAnywhere,Category="Applied Effect",BlueprintReadOnly)
 	bool bDestroyOnEffectRemoval=false;

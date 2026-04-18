@@ -65,6 +65,13 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Widget")
 	TObjectPtr<UWidgetComponent> HealthBar;
-	
+	//Instant和Duration的GE在应用后，此物体是否需要被销毁
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	bool bDestroyOnEffectApplication = true;
+
+	//敌人是否能够拾取此物体
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	bool bApplyEffectsToEnemies = false;
+
 	void Die() override;
 };
