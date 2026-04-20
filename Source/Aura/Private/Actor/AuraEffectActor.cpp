@@ -22,8 +22,7 @@ void AAuraEffectActor::BeginPlay()
 
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-	if (TargetActor->ActorHasTag("Enemy")&&!bApplyEffectsToEnemies) return;
-	
+
 	UAbilitySystemComponent*TargetASC= UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	if (TargetASC==nullptr) return;
 	
