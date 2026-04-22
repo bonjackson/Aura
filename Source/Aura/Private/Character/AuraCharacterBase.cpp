@@ -64,10 +64,11 @@ void AAuraCharacterBase::AddCharacterAbilities()
 	ASC->AddCharacterAbilities(StartupAbilities);
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation()
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation() const
 {
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
+
 
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 {

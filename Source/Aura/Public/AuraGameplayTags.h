@@ -56,6 +56,8 @@ public:
 	FGameplayTag Attributes_Resistance_Physical; //物理伤害抵抗 标签
 	
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistance; //属性伤害标签对应属性抵抗标签
+	
+	FGameplayTag Abilities_Attack; //攻击技能激活标签
 private:
 	static  FAuraGameplayTags GameplayTags;
 	

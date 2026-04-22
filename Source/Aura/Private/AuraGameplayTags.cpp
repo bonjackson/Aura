@@ -157,6 +157,16 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 			FString("物理伤害抗性")
 		);
 	
+	/*
+ * Abilities
+ */
+	
+	GameplayTags.Abilities_Attack = UGameplayTagsManager::Get()
+		.AddNativeGameplayTag(
+			FName("Abilities.Attack"),
+			FString("攻击技能标签")
+		);
+
 	
 	/* 将属性和抗性标签对应 */
 	GameplayTags.DamageTypesToResistance.Add(GameplayTags.Damage_Fire, GameplayTags.Attributes_Resistance_Fire);

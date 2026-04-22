@@ -6,6 +6,7 @@
 #include "RPGAbilityTypes.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Game/AuraGameModeBase.h"
+#include "Interaction/CombatInterface.h"
 #include"Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/Controller/AuraWidgetController.h"
@@ -77,20 +78,33 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalSpecHandle.Data.Get());
 }
 
-void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass)
 {
-	const AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if(GameMode == nullptr) return;
-
-	const AActor* AvatarActor = ASC->GetAvatarActor();
-
 	//从实例获取到关卡角色的配置
-	UCharacterClassInfo* CharacterClassInfo = GameMode->CharacterClassInfo;
-
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if(CharacterClassInfo == nullptr) return;
+	//从接口获取到角色等级
+	ICombatInterface* CombatInterface = Cast<ICombatInterface>(ASC->GetAvatarActor());
+	
+	int32 CharacterLevel = 1;
+	if(CombatInterface)
+	{
+		CharacterLevel = CombatInterface->GetPlayerLevel();
+	}
+	
 	//遍历角色拥有的技能数组
 	for(const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
 	{
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1); //创建技能实例
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CharacterLevel); //创建技能实例
+		ASC->GiveAbility(AbilitySpec); //只应用不激活
+	}
+	//获取到默认的基础角色数据
+	const FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+
+	//应用职业技能数组
+	for(const TSubclassOf<UGameplayAbility> AbilityClass : ClassDefaultInfo.StartupAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CharacterLevel); //创建技能实例
 		ASC->GiveAbility(AbilitySpec); //只应用不激活
 	}
 }

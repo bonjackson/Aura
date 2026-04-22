@@ -22,9 +22,10 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase,public  IEnemyInterface
 public:
 	AAuraEnemy();
 	//EnemyInterface
-	virtual void HightlightActor() override;
-	virtual  void UnHightlightActor() override;
-	
+	virtual void HighlightActor() override;
+	virtual  void UnHighlightActor() override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	//Combat Interface
 	virtual int32 GetPlayerLevel() override;
 	
@@ -48,8 +49,13 @@ public:
 	UPROPERTY(EditAnywhere, Category="AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 
+	UPROPERTY(BlueprintReadWrite, Category="Combat")
+	TObjectPtr<AActor>CombatTarget;
+	
 	UPROPERTY()
 	TObjectPtr<AAuraAIController> AuraAIController;
+	
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;

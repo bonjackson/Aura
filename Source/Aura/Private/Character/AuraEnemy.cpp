@@ -34,7 +34,7 @@ AAuraEnemy::AAuraEnemy()
 	AttributeSet=CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 }
 
-void AAuraEnemy::HightlightActor()
+void AAuraEnemy::HighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(true);
 	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
@@ -43,10 +43,20 @@ void AAuraEnemy::HightlightActor()
 	
 }
 
-void AAuraEnemy::UnHightlightActor()
+void AAuraEnemy::UnHighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
+}
+
+AActor* AAuraEnemy::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
+void AAuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
 }
 
 int32 AAuraEnemy::GetPlayerLevel()
@@ -61,7 +71,7 @@ void AAuraEnemy::BeginPlay()
 	//初始化角色的技能
 	if (HasAuthority())
 	{
-		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent,CharacterClass);
 	}
 	
 	
