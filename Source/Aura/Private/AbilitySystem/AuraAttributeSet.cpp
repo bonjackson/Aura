@@ -252,12 +252,18 @@ void UAuraAttributeSet::OnRep_PhysicalResistance(const FGameplayAttributeData& O
 
 void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, const float Damage, bool IsBlockedHit, bool IsCriticalHit)
 {
-	//调用显示伤害数字
+	///调用显示伤害数字
 	if(Props.SourceCharacter != Props.TargetCharacter)
 	{
+		//从技能释放者身上获取PC并显示伤害数字
 		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
 		{
-			PC->ShowDamageNumber(Damage, Props.TargetCharacter,IsBlockedHit, IsCriticalHit); //调用显示伤害数字
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, IsBlockedHit, IsCriticalHit); //调用显示伤害数字
+		}
+		//从目标身上获取PC并显示伤害数字
+		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.TargetCharacter->Controller))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, IsBlockedHit, IsCriticalHit); //调用显示伤害数字
 		}
 	}
 }

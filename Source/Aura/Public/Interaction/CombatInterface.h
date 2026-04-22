@@ -34,7 +34,12 @@ public:
 	UAnimMontage* GetHitReactMontage(); //获取受击蒙太奇动画
 	
 	virtual void Die() = 0;
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool IsDead() const; //获取当前角色是否死亡
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	AActor* GetAvatar(); //获取当前角色
 protected:
 	
 };

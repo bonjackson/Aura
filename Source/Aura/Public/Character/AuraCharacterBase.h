@@ -27,10 +27,13 @@ protected:
 
 	virtual void BeginPlay() override;
 	
+	bool bDead = false;
+	
 	UPROPERTY(EditAnywhere,Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	
 	
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
@@ -53,16 +56,21 @@ protected:
 	
 	void AddCharacterAbilities();
 	
+	
+	
+	/* ICombatInterface战斗接口 */
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	virtual FVector GetCombatSocketLocation_Implementation() const override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
+	virtual void Die() override;
+	/* ICombatInterface战斗接口 结束 */
+	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
-	virtual FVector GetCombatSocketLocation_Implementation() const override;
-	
-	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
-	
-	virtual void Die() override;
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 	
@@ -75,12 +83,15 @@ protected:
 	void Dissolve(); //溶解效果
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartDissolveTimeline(const TArray<UMaterialInstanceDynamic*>& DynamicMaterialInstance);
+	
+	
 private:
 
 	
 	UPROPERTY(EditAnywhere, Category="Attributes")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities; 
-
+	
+	
 	
 };
  

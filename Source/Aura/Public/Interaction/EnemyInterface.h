@@ -30,4 +30,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	AActor* GetCombatTarget() const; //获取敌人的攻击目标
+	
+	
+	
 };
