@@ -49,7 +49,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 	
-
 	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect>GameplayEffectClass,float Level) const;
 	virtual void InitializeDefaultAttributes() const;
@@ -63,6 +62,8 @@ protected:
 	virtual FVector GetCombatSocketLocation_Implementation() const override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual FVector GetCombatSocketLocationByStruct_Implementation(const FTaggedMontage TaggedMontage) const override;
 	virtual void Die() override;
 	/* ICombatInterface战斗接口 结束 */
 	
@@ -71,6 +72,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+	
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TArray<FTaggedMontage> AttackMontage;
+
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 	
@@ -91,7 +96,7 @@ private:
 	UPROPERTY(EditAnywhere, Category="Attributes")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities; 
 	
-	
+
 	
 };
  

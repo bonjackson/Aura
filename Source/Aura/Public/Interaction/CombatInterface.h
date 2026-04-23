@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
@@ -16,6 +17,25 @@ class UCombatInterface : public UInterface
 /**
  * 
  */
+//蒙太奇动画和标签以及骨骼位置的映射，用于攻击技能获取和设置攻击范围
+USTRUCT(BlueprintType)
+struct FTaggedMontage
+{
+	GENERATED_BODY()
+
+	//使用的蒙太奇
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UAnimMontage* Montage = nullptr;
+
+	//对应的标签
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag MontageTag;
+
+	//攻击时的触发伤害的骨骼插槽
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName CombatTipSocketName; //设置技能释放的位置
+};
+
 class AURA_API ICombatInterface
 {
 	GENERATED_BODY()
@@ -40,6 +60,14 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AActor* GetAvatar(); //获取当前角色
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	TArray<FTaggedMontage> GetAttackMontages();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FVector GetCombatSocketLocationByStruct(const FTaggedMontage TaggedMontage) const;
+
+
 protected:
 	
 };

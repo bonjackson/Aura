@@ -3,6 +3,7 @@
 
 #include "Character/AuraCharacterBase.h"
 #include"AbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
@@ -77,6 +78,23 @@ bool AAuraCharacterBase::IsDead_Implementation() const
 AActor* AAuraCharacterBase::GetAvatar_Implementation()
 {
 	return this;
+}
+
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontage;
+}
+
+FVector AAuraCharacterBase::GetCombatSocketLocationByStruct_Implementation(const FTaggedMontage TaggedMontage) const
+{
+	if(TaggedMontage.MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_Weapon))
+	{
+		return Weapon->GetSocketLocation(TaggedMontage.CombatTipSocketName);
+	}
+	else
+	{
+		return GetMesh()->GetSocketLocation(TaggedMontage.CombatTipSocketName);
+	}
 }
 
 
