@@ -55,7 +55,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		//添加技能触发位置
 		EffectContextHandle.AddOrigin(ProjectileTargetLocation);
 		
-		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 		
 		const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get(); //获取标签单例
 		//UAbilitySystemBlueprintLibrary::AssignSetByCallerMagnitude() //使用DataName设置
