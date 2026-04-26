@@ -23,5 +23,10 @@ protected:
 	
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
+	
+	//从角色设置的蒙太奇数组总，随机一个蒙太奇使用
+	UFUNCTION(BlueprintPure)
+	static FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages);
+
 
 };
