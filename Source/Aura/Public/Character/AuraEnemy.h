@@ -80,4 +80,6 @@ protected:
 	bool bApplyEffectsToEnemies = false;
 
 	void Die() override;
+	
+	
 };

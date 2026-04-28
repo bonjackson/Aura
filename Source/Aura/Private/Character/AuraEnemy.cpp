@@ -155,3 +155,4 @@ void AAuraEnemy::Die()
 	if(AuraAIController) AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
 	Super::Die();
 }
+

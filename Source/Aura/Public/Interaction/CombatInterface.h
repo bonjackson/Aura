@@ -7,6 +7,9 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
+class UNiagaraSystem;
+
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, BlueprintType)
 class UCombatInterface : public UInterface
@@ -34,6 +37,10 @@ struct FTaggedMontage
 	//攻击时的触发伤害的骨骼插槽
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName CombatTipSocketName; //设置技能释放的位置
+	
+	//攻击时的触发音效
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	USoundBase* ImpactSound = nullptr;
 };
 
 class AURA_API ICombatInterface
@@ -66,6 +73,9 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocationByStruct(const FTaggedMontage TaggedMontage) const;
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UNiagaraSystem* GetBloodEffect(); //获取角色的受伤特效
 
 
 protected:

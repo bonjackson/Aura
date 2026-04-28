@@ -21,4 +21,5 @@ public:
 	virtual  int32 GetPlayerLevel() override;
 private:
 	void InitAbilityActorInfo() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 };

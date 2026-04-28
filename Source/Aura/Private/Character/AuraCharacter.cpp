@@ -72,3 +72,9 @@ void AAuraCharacter::InitAbilityActorInfo()
 	}
 	InitializeDefaultAttributes();
 }
+
+UNiagaraSystem* AAuraCharacter::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
