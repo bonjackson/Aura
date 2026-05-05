@@ -1,4 +1,4 @@
-
+// Copyright Druid Mechanics
 
 
 #include "Player/AuraPlayerState.h"
@@ -9,18 +9,20 @@
 
 AAuraPlayerState::AAuraPlayerState()
 {
-	NetUpdateFrequency=100.f;
-	AbilitySystemComponent=CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-	AttributeSet=CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
+
+	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
+	
+	NetUpdateFrequency = 100.f;
 }
 
-void AAuraPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+void AAuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
-	DOREPLIFETIME(AAuraPlayerState,Level);
+	DOREPLIFETIME(AAuraPlayerState, Level);
 }
 
 UAbilitySystemComponent* AAuraPlayerState::GetAbilitySystemComponent() const
@@ -32,5 +34,3 @@ void AAuraPlayerState::OnRep_Level(int32 OldLevel)
 {
 	
 }
-
-

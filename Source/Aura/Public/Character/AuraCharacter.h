@@ -1,25 +1,27 @@
-
+// Copyright Druid Mechanics
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AuraCharacterBase.h"
+#include "Character/AuraCharacterBase.h"
 #include "AuraCharacter.generated.h"
+
 /**
  * 
  */
 UCLASS()
-class AAuraCharacter : public AAuraCharacterBase
+class AURA_API AAuraCharacter : public AAuraCharacterBase
 {
 	GENERATED_BODY()
 public:
 	AAuraCharacter();
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
+
+	/** Combat Interface */
+	virtual int32 GetPlayerLevel() override;
+	/** end Combat Interface */
 	
-	//Combat Interface
-	virtual  int32 GetPlayerLevel() override;
 private:
-	void InitAbilityActorInfo() override;
-	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
+	virtual void InitAbilityActorInfo() override;
 };

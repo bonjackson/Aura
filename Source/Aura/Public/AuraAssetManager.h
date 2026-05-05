@@ -1,4 +1,4 @@
-
+// Copyright Druid Mechanics
 
 #pragma once
 
@@ -13,11 +13,11 @@ UCLASS()
 class AURA_API UAuraAssetManager : public UAssetManager
 {
 	GENERATED_BODY()
-	
 public:
+
 	static UAuraAssetManager& Get();
-	
-	
+
 protected:
-	void StartInitialLoading() override;
+
+	virtual void StartInitialLoading() override;
 };

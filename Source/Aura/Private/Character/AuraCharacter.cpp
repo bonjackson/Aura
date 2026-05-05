@@ -1,11 +1,10 @@
-
+// Copyright Druid Mechanics
 
 
 #include "Character/AuraCharacter.h"
-#include "Logging/LogMacros.h"
+
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
@@ -13,68 +12,55 @@
 
 AAuraCharacter::AAuraCharacter()
 {
-	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.f,400.f,0.f);
-	GetCharacterMovement()->bConstrainToPlane=true;
-	GetCharacterMovement()->bSnapToPlaneAtStart=true;
-	
-	bUseControllerRotationPitch=false;
-	bUseControllerRotationRoll=false;
-	bUseControllerRotationYaw=false;
-	
-	//设置角色不会和相机碰撞
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
+	GetCharacterMovement()->bConstrainToPlane = true;
+	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	//Init ability actor info in the server
+
+	// Init ability actor info for the Server
 	InitAbilityActorInfo();
-	
-	SetOwner(NewController);
-	
 	AddCharacterAbilities();
 }
 
 void AAuraCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	
-	//Init ability actor info for the client
+
+	// Init ability actor info for the Client
 	InitAbilityActorInfo();
 }
 
 int32 AAuraCharacter::GetPlayerLevel()
 {
-	const AAuraPlayerState*AuraPlayerState=GetPlayerState<AAuraPlayerState>();
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
 	return AuraPlayerState->GetPlayerLevel();
 }
 
 void AAuraCharacter::InitAbilityActorInfo()
 {
-	AAuraPlayerState*AuraPlayerState=GetPlayerState<AAuraPlayerState>();
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
-	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState,this);
+	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
 	Cast<UAuraAbilitySystemComponent>(AuraPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
-	AbilitySystemComponent=AuraPlayerState->GetAbilitySystemComponent();
-	AttributeSet=AuraPlayerState->GetAttributeSet();
-	
-	if (AAuraPlayerController*AuraPlayerController=Cast<AAuraPlayerController>(GetController()))
+	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	AttributeSet = AuraPlayerState->GetAttributeSet();
+
+	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
-		if (AAuraHUD*AuraHUD=Cast<AAuraHUD>(AuraPlayerController->GetHUD()))
+		if (AAuraHUD* AuraHUD = Cast<AAuraHUD>(AuraPlayerController->GetHUD()))
 		{
-			AuraHUD->InitOverlay(AuraPlayerController,AuraPlayerState,AbilitySystemComponent,AttributeSet);
+			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
 	InitializeDefaultAttributes();
 }
-
-UNiagaraSystem* AAuraCharacter::GetBloodEffect_Implementation()
-{
-	return BloodEffect;
-}
-

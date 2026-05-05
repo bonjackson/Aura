@@ -1,11 +1,11 @@
-
+// Copyright Druid Mechanics
 
 
 #include "AbilitySystem/AuraAbilitySystemGlobals.h"
 
-#include "RPGAbilityTypes.h"
+#include "AuraAbilityTypes.h"
 
 FGameplayEffectContext* UAuraAbilitySystemGlobals::AllocGameplayEffectContext() const
 {
-	return new FRPGGameplayEffectContext();
+	return new FAuraGameplayEffectContext();
 }

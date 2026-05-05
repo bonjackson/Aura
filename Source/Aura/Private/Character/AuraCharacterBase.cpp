@@ -1,26 +1,25 @@
-
+// Copyright Druid Mechanics
 
 
 #include "Character/AuraCharacterBase.h"
-#include"AbilitySystemComponent.h"
+#include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
 
-
-
 AAuraCharacterBase::AAuraCharacterBase()
 {
- 	
 	PrimaryActorTick.bCanEverTick = false;
-	
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_PROJECTILE, ECR_Overlap); //设置碰撞体可以和发射物产生重叠
-	GetCapsuleComponent()->SetGenerateOverlapEvents(true); //设置碰撞体可以生成重叠事件
 
-	Weapon=CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
-	Weapon->SetupAttachment(GetMesh(),FName("WeaponHandSocket"));
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
+
+	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
+	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -29,42 +28,56 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
+void AAuraCharacterBase::Die()
+{
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	MulticastHandleDeath();
+}
+
+void AAuraCharacterBase::MulticastHandleDeath_Implementation()
+{
+	Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Dissolve();
+	bDead = true;
+}
 
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
-void AAuraCharacterBase::InitAbilityActorInfo()
+
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
 {
-	AbilitySystemComponent->InitAbilityActorInfo(this,this);
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent) ->AbilityActorInfoSet();
+	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Weapon) && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_LeftHand))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_RightHand))
+	{
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+	}
+	return FVector();
 }
-
-void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
-{
-	check(IsValid(GetAbilitySystemComponent()));
-	check(GameplayEffectClass);
-	FGameplayEffectContextHandle ContextHandle= GetAbilitySystemComponent()->MakeEffectContext();
-	ContextHandle.AddSourceObject(this);
-	const FGameplayEffectSpecHandle SpecHandle=GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass,Level,ContextHandle);
-	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(),GetAbilitySystemComponent());
-}
-
-void AAuraCharacterBase::InitializeDefaultAttributes() const 
-{
-	ApplyEffectToSelf(DefaultPrimaryAttributes,1.f);
-	ApplyEffectToSelf(DefaultSecondaryAttributes,1.f);
-	ApplyEffectToSelf(DefaultVitalAttributes,1.f);
-}
-
-void AAuraCharacterBase::AddCharacterAbilities()
-{
-	UAuraAbilitySystemComponent* ASC = CastChecked<UAuraAbilitySystemComponent>(GetAbilitySystemComponent());
-	if(!HasAuthority()) return; 
-
-	ASC->AddCharacterAbilities(StartupAbilities);
-}
-
 
 bool AAuraCharacterBase::IsDead_Implementation() const
 {
@@ -78,66 +91,19 @@ AActor* AAuraCharacterBase::GetAvatar_Implementation()
 
 TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
 {
-	return AttackMontage;
+	return AttackMontages;
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocationByStruct_Implementation(const FGameplayTag& MontageTag) const
+UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
 {
-	if(MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_Weapon))
-	{
-		return Weapon->GetSocketLocation(WeaponTipSocketName);
-	}
-	if(MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_Weapon))
-	{
-		return Weapon->GetSocketLocation(LeftHandSocketName);
-	}
-	if(MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_Weapon))
-	{
-		return Weapon->GetSocketLocation(RightHandSocketName);
-	}
-	return FVector();
-}
-
-
-UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
-{
-	return HitReactMontage;
-}
-
-void AAuraCharacterBase::Die()
-{
-	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
-	MulticastHandleDeath();
-}
-
-void AAuraCharacterBase::Dissolve()
-{
-	TArray<UMaterialInstanceDynamic*> MatArray;
-	//设置角色溶解
-	if(IsValid(DissolveMaterialInstance))
-	{
-		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
-		GetMesh()->SetMaterial(0, DynamicMatInst);
-		MatArray.Add(DynamicMatInst);
-	}
-
-	//设置武器溶解
-	if(IsValid(WeaponDissolveMaterialInstance))
-	{
-		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
-		Weapon->SetMaterial(0, DynamicMatInst);
-		MatArray.Add(DynamicMatInst);
-	}
-
-	//调用时间轴渐变溶解
-	StartDissolveTimeline(MatArray);
+	return BloodEffect;
 }
 
 FTaggedMontage AAuraCharacterBase::GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag)
 {
-	for(FTaggedMontage TaggedMontage : AttackMontage)
+	for (FTaggedMontage TaggedMontage : AttackMontages)
 	{
-		if(TaggedMontage.MontageTag.MatchesTagExact(MontageTag))
+		if (TaggedMontage.MontageTag == MontageTag)
 		{
 			return TaggedMontage;
 		}
@@ -145,24 +111,48 @@ FTaggedMontage AAuraCharacterBase::GetTaggedMontageByTag_Implementation(const FG
 	return FTaggedMontage();
 }
 
-void AAuraCharacterBase::MulticastHandleDeath_Implementation()
+void AAuraCharacterBase::InitAbilityActorInfo()
 {
-	//开启武器物理效果
-	Weapon->SetSimulatePhysics(true); //开启模拟物理效果
-	Weapon->SetEnableGravity(true); //开启重力效果
-	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly); //开启物理碰撞通道
+}
 
-	//开启角色物理效果
-	GetMesh()->SetSimulatePhysics(true); //开启模拟物理效果
-	GetMesh()->SetEnableGravity(true); //开启重力效果
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly); //开启物理碰撞通道
-	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block); //开启角色与静态物体产生碰撞
+void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(GameplayEffectClass);
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
+}
 
-	//关闭角色碰撞体碰撞通道，避免其对武器和角色模拟物理效果产生影响
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
-	Dissolve();
-	
-	bDead = true;
+void AAuraCharacterBase::InitializeDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}
+
+void AAuraCharacterBase::AddCharacterAbilities()
+{
+	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	AuraASC->AddCharacterAbilities(StartupAbilities);
+}
+
+void AAuraCharacterBase::Dissolve()
+{
+	if (IsValid(DissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, DynamicMatInst);
+		StartDissolveTimeline(DynamicMatInst);
+	}
+	if (IsValid(WeaponDissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		Weapon->SetMaterial(0, DynamicMatInst);
+		StartWeaponDissolveTimeline(DynamicMatInst);
+	}
 }
 

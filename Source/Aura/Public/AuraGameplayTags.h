@@ -1,77 +1,70 @@
-
+// Copyright Druid Mechanics
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
 /**
  * AuraGameplayTags
- * 
+ *
  * Singleton containing native Gameplay Tags
  */
+
 struct FAuraGameplayTags
 {
 public:
-	static const FAuraGameplayTags& Get(){return GameplayTags;}
-	static void InitializeNativeGameplayTags();
-	
+    static const FAuraGameplayTags& Get() { return GameplayTags;}
+    static void InitializeNativeGameplayTags();
+
 	FGameplayTag Attributes_Primary_Strength;
 	FGameplayTag Attributes_Primary_Intelligence;
 	FGameplayTag Attributes_Primary_Resilience;
 	FGameplayTag Attributes_Primary_Vigor;
-	
+
 	FGameplayTag Attributes_Secondary_Armor;
 	FGameplayTag Attributes_Secondary_ArmorPenetration;
 	FGameplayTag Attributes_Secondary_BlockChance;
 	FGameplayTag Attributes_Secondary_CriticalHitChance;
-	FGameplayTag Attributes_Secondary_CriticalHitResistance;
 	FGameplayTag Attributes_Secondary_CriticalHitDamage;
+	FGameplayTag Attributes_Secondary_CriticalHitResistance;
 	FGameplayTag Attributes_Secondary_HealthRegeneration;
 	FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
-	
-	
-	FGameplayTag InputTag_LMB; //鼠标左键
-	FGameplayTag InputTag_RMB; //鼠标右键
-	FGameplayTag InputTag_1; //1键
-	FGameplayTag InputTag_2; //2键
-	FGameplayTag InputTag_3; //3键
-	FGameplayTag InputTag_4; //4键
 
-	
-	
-	//Damage Types 
-	FGameplayTag Damage; //伤害 标签
-	FGameplayTag Damage_Fire; //火属性伤害 标签
-	FGameplayTag Damage_Lightning; //雷属性伤害 标签
-	FGameplayTag Damage_Arcane; //魔法伤害 标签
-	FGameplayTag Damage_Physical; //物理伤害 标签
-	FGameplayTag Effects_HitReact; //受击 标签
-	
-	//Resistance Types
-	FGameplayTag Attributes_Resistance_Fire; //火属性伤害抵抗 标签
-	FGameplayTag Attributes_Resistance_Lightning; //雷属性伤害抵抗 标签
-	FGameplayTag Attributes_Resistance_Arcane; //魔法伤害抵抗 标签
-	FGameplayTag Attributes_Resistance_Physical; //物理伤害抵抗 标签
-	
-	
-	FGameplayTag CombatSocket_Weapon; //使用武器攻击部位标签
-	FGameplayTag CombatSocket_RightHand; //右手攻击部位标签
-	FGameplayTag CombatSocket_LeftHand; //左手攻击部位标签
-	
-	//使用攻击动作索引
-	FGameplayTag Montage_Attack_1; 
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Lightning;
+	FGameplayTag Attributes_Resistance_Arcane;
+	FGameplayTag Attributes_Resistance_Physical;
+
+	FGameplayTag InputTag_LMB;
+	FGameplayTag InputTag_RMB;
+	FGameplayTag InputTag_1;
+	FGameplayTag InputTag_2;
+	FGameplayTag InputTag_3;
+	FGameplayTag InputTag_4;
+
+	FGameplayTag Damage;
+	FGameplayTag Damage_Fire;
+	FGameplayTag Damage_Lightning;
+	FGameplayTag Damage_Arcane;
+	FGameplayTag Damage_Physical;
+
+	FGameplayTag Abilities_Attack;
+
+	FGameplayTag CombatSocket_Weapon;
+	FGameplayTag CombatSocket_RightHand;
+	FGameplayTag CombatSocket_LeftHand;
+
+	FGameplayTag Montage_Attack_1;
 	FGameplayTag Montage_Attack_2;
 	FGameplayTag Montage_Attack_3;
 	FGameplayTag Montage_Attack_4;
 
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 
-	
-	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistance; //属性伤害标签对应属性抵抗标签
-	
-	FGameplayTag Abilities_Attack; //攻击技能激活标签
+	FGameplayTag Effects_HitReact;
 private:
-	static  FAuraGameplayTags GameplayTags;
-	
+    static FAuraGameplayTags GameplayTags;
 };

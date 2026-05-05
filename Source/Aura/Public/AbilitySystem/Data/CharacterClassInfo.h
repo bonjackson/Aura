@@ -1,55 +1,57 @@
-
+// Copyright Druid Mechanics
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayEffect.h"
 #include "Engine/DataAsset.h"
 #include "CharacterClassInfo.generated.h"
 
-/**
- * 
- */
-//角色职业类型的枚举
+
+class UGameplayEffect;
+class UGameplayAbility;
+
 UENUM(BlueprintType)
 enum class ECharacterClass : uint8
 {
-	Elementalist, //法师
-	Warrior, //战士
-	Ranger //游侠
+	Elementalist,
+	Warrior,
+	Ranger
 };
-USTRUCT()
+
+USTRUCT(BlueprintType)
 struct FCharacterClassDefaultInfo
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly, Category="Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TSubclassOf<UGameplayEffect> PrimaryAttributes;
-	
-	UPROPERTY(EditDefaultsOnly, Category="Class Defaults")
+
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 };
+
+/**
+ * 
+ */
 UCLASS()
 class AURA_API UCharacterClassInfo : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-
-	UPROPERTY(EditDefaultsOnly, Category="Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
-	
-	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults")
+
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
-	
-	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults")
+
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 
-	//通过枚举获取对应的初始化类
-	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
-	
-	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
-	
-	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults|Damgage")
+
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults|Damage")
 	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
+
+	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
 };
