@@ -65,10 +65,6 @@ void AAuraCharacterBase::AddCharacterAbilities()
 	ASC->AddCharacterAbilities(StartupAbilities);
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation() const
-{
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
-}
 
 bool AAuraCharacterBase::IsDead_Implementation() const
 {
@@ -85,16 +81,21 @@ TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
 	return AttackMontage;
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocationByStruct_Implementation(const FTaggedMontage TaggedMontage) const
+FVector AAuraCharacterBase::GetCombatSocketLocationByStruct_Implementation(const FGameplayTag& MontageTag) const
 {
-	if(TaggedMontage.MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_Weapon))
+	if(MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_Weapon))
 	{
-		return Weapon->GetSocketLocation(TaggedMontage.CombatTipSocketName);
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
 	}
-	else
+	if(MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_Weapon))
 	{
-		return GetMesh()->GetSocketLocation(TaggedMontage.CombatTipSocketName);
+		return Weapon->GetSocketLocation(LeftHandSocketName);
 	}
+	if(MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_Weapon))
+	{
+		return Weapon->GetSocketLocation(RightHandSocketName);
+	}
+	return FVector();
 }
 
 
@@ -130,6 +131,18 @@ void AAuraCharacterBase::Dissolve()
 
 	//调用时间轴渐变溶解
 	StartDissolveTimeline(MatArray);
+}
+
+FTaggedMontage AAuraCharacterBase::GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag)
+{
+	for(FTaggedMontage TaggedMontage : AttackMontage)
+	{
+		if(TaggedMontage.MontageTag.MatchesTagExact(MontageTag))
+		{
+			return TaggedMontage;
+		}
+	}
+	return FTaggedMontage();
 }
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()

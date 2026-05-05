@@ -9,6 +9,7 @@
 
 #include "AuraCharacterBase.generated.h"
 
+struct FAuraGameplayTags;
 class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -60,16 +61,21 @@ protected:
 	
 	/* ICombatInterface战斗接口 */
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
-	virtual FVector GetCombatSocketLocation_Implementation() const override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
-	virtual FVector GetCombatSocketLocationByStruct_Implementation(const FTaggedMontage TaggedMontage) const override;
+	virtual FVector GetCombatSocketLocationByStruct_Implementation(const FGameplayTag& MontageTag) const override;
 	virtual void Die() override;
 	/* ICombatInterface战斗接口 结束 */
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName LeftHandSocketName;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName RightHandSocketName;
 	
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
@@ -92,6 +98,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UNiagaraSystem* BloodEffect; //受伤特效
+	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
+
 private:
 
 	

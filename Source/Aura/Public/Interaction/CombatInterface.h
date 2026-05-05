@@ -7,6 +7,7 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
+struct FAuraGameplayTags;
 class UNiagaraSystem;
 
 
@@ -33,7 +34,11 @@ struct FTaggedMontage
 	//对应的标签
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag MontageTag;
-
+	
+	//部位对应的标签
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag SocketTag;
+	
 	//攻击时的触发伤害的骨骼插槽
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName CombatTipSocketName; //设置技能释放的位置
@@ -51,8 +56,6 @@ class AURA_API ICombatInterface
 	
 public:
 	virtual int32 GetPlayerLevel();
-	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
-	FVector GetCombatSocketLocation() const;
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& Target);
@@ -72,11 +75,13 @@ public:
 	TArray<FTaggedMontage> GetAttackMontages();
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	FVector GetCombatSocketLocationByStruct(const FTaggedMontage TaggedMontage) const;
+	FVector GetCombatSocketLocationByStruct(const FGameplayTag& MontageTag) const;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UNiagaraSystem* GetBloodEffect(); //获取角色的受伤特效
-
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FTaggedMontage GetTaggedMontageByTag(const FGameplayTag& MontageTag); //通过标签获取对应的结构体
 
 protected:
 	
