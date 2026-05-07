@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
-#include "NiagaraFunctionLibrary.h"
 #include "AuraProjectile.generated.h"
 
 class UNiagaraSystem;
@@ -53,6 +52,4 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> LoopingSoundComponent;
-	
-	void PlayImpact();
 };
